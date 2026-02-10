@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { loginUserFile } from "@/lib/auth-store";
+import { loginUser as loginUserMongo } from "@/lib/mongo-auth";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-/** Login: file-based (works without MongoDB/backend) */
+/** Login: MongoDB if MONGODB_URI set (Vercel), else file-based (local) */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
   const email = String(body?.email ?? "").trim();
@@ -17,8 +18,12 @@ export async function POST(req: Request) {
     );
   }
 
+  const useMongo = !!process.env.MONGODB_URI;
+
   try {
-    const result = await loginUserFile(email, password);
+    const result = useMongo
+      ? await loginUserMongo(email, password)
+      : await loginUserFile(email, password);
     return NextResponse.json(result);
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Login failed";

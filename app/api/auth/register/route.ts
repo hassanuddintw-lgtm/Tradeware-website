@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { registerUserFile } from "@/lib/auth-store";
+import { registerUser as registerUserMongo } from "@/lib/mongo-auth";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-/** Register: file-based (works without MongoDB/backend) */
+/** Register: MongoDB if MONGODB_URI set (Vercel), else file-based (local) */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
   const name = String(body?.name ?? "").trim();
@@ -25,8 +26,12 @@ export async function POST(req: Request) {
     );
   }
 
+  const useMongo = !!process.env.MONGODB_URI;
+
   try {
-    const result = await registerUserFile({ name, email, password, phone });
+    const result = useMongo
+      ? await registerUserMongo({ name, email, password, phone })
+      : await registerUserFile({ name, email, password, phone });
     return NextResponse.json(result, { status: 201 });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Registration failed";
