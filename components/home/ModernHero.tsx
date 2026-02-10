@@ -255,7 +255,7 @@ export default function ModernHero() {
             <p className="text-[11px] sm:text-xs text-cyan-400/90 mt-2.5 max-w-md">
               Translated auction sheets &amp; official export handling.
             </p>
-            <p className="text-[10px] sm:text-[11px] text-zinc-500 mt-1.5 max-w-md">
+            <p className="text-[11px] sm:text-xs text-white font-medium mt-1.5 max-w-md opacity-95">
               Export-only sales. Vehicles sold as-is from auction; no test drives.
             </p>
 
@@ -267,7 +267,7 @@ export default function ModernHero() {
               ].map((stat, i) => (
                 <div key={i} className="min-w-0">
                   <div className="text-lg sm:text-xl font-bold text-white">{stat.value}</div>
-                  <div className="text-[9px] sm:text-[10px] text-zinc-500 uppercase tracking-wider">{stat.label}</div>
+                  <div className="text-[9px] sm:text-[10px] text-white/85 uppercase tracking-wider">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -280,7 +280,7 @@ export default function ModernHero() {
 
       <div
         ref={scrollHintRef}
-        className="absolute bottom-3 left-4 sm:bottom-4 sm:left-6 lg:bottom-6 lg:left-8 flex items-center gap-2 text-[9px] sm:text-[10px] text-zinc-500 uppercase tracking-widest z-10"
+        className="absolute bottom-3 left-4 sm:bottom-4 sm:left-6 lg:bottom-6 lg:left-8 flex items-center gap-2 text-[9px] sm:text-[10px] text-white/85 uppercase tracking-widest z-10"
         aria-hidden
       >
         <span>Scroll</span>
