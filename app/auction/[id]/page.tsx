@@ -62,7 +62,11 @@ export default function AuctionRoomPage() {
   const router = useRouter();
   const id = params?.id as string;
   const { user, isAdmin } = useAuthContext();
-  const { socket, connected, joinAuction, leaveAuction } = useSocket();
+  const socketContext = useSocket();
+  const socket = socketContext?.socket ?? null;
+  const connected = socketContext?.connected ?? false;
+  const joinAuction = socketContext?.joinAuction ?? (() => {});
+  const leaveAuction = socketContext?.leaveAuction ?? (() => {});
 
   const [auction, setAuction] = useState<AuctionData | null>(null);
   const [loading, setLoading] = useState(true);
