@@ -16,10 +16,10 @@ export type ContactFormData = {
 };
 
 type ContactPageContentProps = {
-  headerRef: React.RefObject<HTMLDivElement | null>;
-  infoRef: React.RefObject<HTMLDivElement | null>;
-  formRef: React.RefObject<HTMLDivElement | null>;
-  formMicroRef: React.RefObject<HTMLDivElement | null>;
+  headerRef: React.RefObject<HTMLDivElement>;
+  infoRef: React.RefObject<HTMLDivElement>;
+  formRef: React.RefObject<HTMLDivElement>;
+  formMicroRef: React.RefObject<HTMLDivElement>;
   formData: ContactFormData;
   onFormChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
   submitted: boolean;
