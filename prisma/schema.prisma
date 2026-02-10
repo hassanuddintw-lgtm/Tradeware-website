@@ -1,0 +1,180 @@
+// Tradeware Automotive Platform - Database Schema
+// SQLite for dev, easily switchable to PostgreSQL for production
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("user") // admin | user
+  phone        String?
+  avatar       String?
+  status       String   @default("active") // active | inactive | suspended
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  inquiries  Inquiry[]
+  bids       Bid[]
+  payments   Payment[]
+  trackings  VehicleTracking[]
+
+  @@map("users")
+}
+
+model Vehicle {
+  id            String   @id @default(cuid())
+  stockId       String   @unique
+  make          String
+  model         String
+  year          Int
+  price         Float
+  priceCif      Float?
+  currency      String   @default("USD")
+  mileage       Int
+  fuelType      String
+  transmission  String
+  bodyType      String?
+  color         String
+  driveType     String?
+  engineSize    Float?
+  engineType    String?
+  location      String
+  condition     String
+  auctionGrade  String?
+  images        String   // JSON array of URLs
+  description   String
+  features      String   // JSON array
+  specifications String? // JSON object
+  status        String   @default("available") // available | sold | reserved | pending
+  featured      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Japan auction import fields (optional; existing rows unaffected)
+  auctionHouse  String?  // e.g. USS, TAA, JU, ARAI
+  lotNumber     String?  // auction lot number
+  auctionDate   String?  // auction date (YYYY-MM-DD or display string)
+  chassis       String?  // chassis number
+  source        String?  // e.g. japan_sync, jdmarapi, avtojp
+
+  inquiries  Inquiry[]
+  trackings  VehicleTracking[]
+
+  @@map("vehicles")
+}
+
+model AuctionListing {
+  id         String   @id @default(cuid())
+  lot        String   @unique
+  make       String
+  model      String
+  year       Int
+  auction    String
+  date       String
+  mileage    Int
+  engine     String
+  startPrice Float
+  soldPrice  Float
+  image      String
+  chassis    String?
+  grade      String?
+  createdAt  DateTime @default(now())
+
+  // Real-time auction: status and times (optional for existing rows)
+  status   String   @default("draft") // draft | active | paused | ended
+  startTime DateTime?
+  endTime   DateTime?
+
+  // Post-auction: set when status becomes "ended" (by settle logic)
+  winningBidId String?  @unique // FK to winning Bid; null if no bids
+  winnerUserId String?  // Denormalized for quick display; null if no winner
+  finalPrice   Float?   // Winning bid amount; null if no bids
+
+  bids       Bid[]
+  winningBid  Bid?      @relation("WinningBid", fields: [winningBidId], references: [id], onDelete: SetNull)
+
+  @@map("auction_listings")
+}
+
+model Inquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  vehicleId String?
+  subject   String?
+  message   String
+  status    String   @default("new") // new | contacted | resolved
+  createdAt DateTime @default(now())
+
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId  String?
+
+  @@map("inquiries")
+}
+
+model Bid {
+  id        String   @id @default(cuid())
+  amount    Float
+  auctionId String
+  userId    String
+  createdAt DateTime @default(now())
+
+  auction           AuctionListing @relation(fields: [auctionId], references: [id], onDelete: Cascade)
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  winningForAuction  AuctionListing? @relation("WinningBid")
+
+  @@map("bids")
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  amount    Float
+  currency  String   @default("USD")
+  status    String   // pending | completed | failed | refunded
+  vehicleId String?
+  userId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model VehicleTracking {
+  id        String   @id @default(cuid())
+  status    String   // in_transit | at_port | customs | delivered
+  location  String?
+  updates   String?  // JSON array of tracking events
+  vehicleId String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([vehicleId, userId])
+  @@map("vehicle_trackings")
+}
+
+// Japan auction sync log (one row per sync; used for "last sync" display)
+model JapanSyncLog {
+  id             String   @id @default(cuid())
+  lastSyncAt     DateTime @default(now())
+  sourceName     String
+  importedCount  Int      @default(0)
+  error          String?
+
+  @@map("japan_sync_logs")
+}

@@ -1,0 +1,58 @@
+import { Testimonial } from "@/types";
+
+export const testimonials: Testimonial[] = [
+  {
+    id: "1",
+    name: "Ahmed Hassan",
+    location: "Dubai, UAE",
+    vehicle: "Toyota Land Cruiser 2020",
+    rating: 5,
+    comment: "Outstanding service from initial consultation through final delivery. Tradeware's team provided exceptional transparency throughout the entire import process. The vehicle arrived exactly as described in the auction sheet, with all documentation perfectly prepared. Their expertise in navigating UAE import regulations saved me significant time and potential complications. The communication was prompt, professional, and always informative. I've already recommended Tradeware to several colleagues in the automotive business. This is truly a company that understands the importance of trust and reliability in international vehicle imports.",
+    date: "2024-01-20",
+  },
+  {
+    id: "2",
+    name: "John Mwangi",
+    location: "Nairobi, Kenya",
+    vehicle: "Nissan Patrol 2019",
+    rating: 5,
+    comment: "As a fleet operator importing multiple vehicles annually, I've worked with several import companies, but Tradeware stands out for their professionalism and attention to detail. The pricing was completely transparent with no hidden fees, which is rare in this industry. Their team personally inspected the vehicle in Yokohama and provided detailed condition reports that matched exactly what we received. The shipping process was seamless, with real-time tracking updates. My Nissan Patrol arrived in perfect condition, exactly as promised. The documentation was flawless, making customs clearance in Mombasa straightforward. I'm now a regular client and have imported over 15 vehicles through Tradeware.",
+    date: "2024-01-15",
+  },
+  {
+    id: "3",
+    name: "Sarah Johnson",
+    location: "Lagos, Nigeria",
+    vehicle: "Honda CR-V 2020",
+    rating: 5,
+    comment: "This was my first experience importing a vehicle from Japan, and I was understandably nervous about the process. Tradeware's team guided me through every step with patience and professionalism. They explained the auction grading system, helped me understand the inspection reports, and provided honest recommendations. The vehicle I purchased exceeded my expectations in both condition and value. The entire process, from selection to delivery at Apapa Port, was handled with remarkable efficiency. Their customer service team responded to all my questions within hours, even accounting for time zone differences. The vehicle arrived on schedule, and all original documents were delivered via DHL as promised. I couldn't be happier with my Honda CR-V and will definitely use Tradeware for future imports.",
+    date: "2024-01-10",
+  },
+  {
+    id: "4",
+    name: "Michael Chen",
+    location: "Auckland, New Zealand",
+    vehicle: "Toyota Hiace 2021",
+    rating: 5,
+    comment: "Importing commercial vehicles requires a different level of expertise, and Tradeware demonstrated exceptional knowledge in this area. They helped me source a fleet of Toyota Hiace vans for my transport business, coordinating multiple purchases and consolidating shipments for cost efficiency. Their understanding of New Zealand's import regulations and compliance requirements was impressive. Each vehicle was thoroughly inspected and documented. The logistics coordination was flawless, with all vehicles arriving at Ports of Auckland on schedule. The quality of the vehicles was outstanding, and the cost savings compared to local dealers were significant. Tradeware has become our preferred supplier for commercial vehicle imports.",
+    date: "2023-12-28",
+  },
+  {
+    id: "5",
+    name: "David O'Brien",
+    location: "Dublin, Ireland",
+    vehicle: "Mazda CX-5 2020",
+    rating: 5,
+    comment: "The European import market can be complex, but Tradeware's expertise made the process remarkably smooth. They handled all the necessary documentation for EU compliance, including type approval and emissions certification. The vehicle inspection was comprehensive, with detailed photographs and condition reports that left no room for surprises. Communication was excellent throughout, with regular updates on the vehicle's status from purchase through shipping. The Mazda arrived in perfect condition, exactly matching the auction description. All original documents were properly authenticated and delivered. The entire experience was professional, transparent, and stress-free. I highly recommend Tradeware to anyone considering importing from Japan.",
+    date: "2023-12-15",
+  },
+  {
+    id: "6",
+    name: "Priya Patel",
+    location: "Mumbai, India",
+    vehicle: "Honda Accord 2019",
+    rating: 5,
+    comment: "Importing to India requires navigating complex regulations and documentation, but Tradeware's team handled everything with remarkable efficiency. They provided detailed guidance on Indian import requirements, helped with customs valuation, and ensured all documentation met local standards. The vehicle quality was exceptional, far superior to what's typically available in the local market. The pricing was transparent, with a clear breakdown of all costs including FOB, shipping, insurance, and customs duties. Their customer service was outstanding, with prompt responses to all inquiries. The Honda Accord arrived at Nhava Sheva Port exactly as described, and customs clearance was straightforward thanks to their meticulous documentation. I'm extremely satisfied with the service and vehicle quality.",
+    date: "2023-12-05",
+  },
+];
