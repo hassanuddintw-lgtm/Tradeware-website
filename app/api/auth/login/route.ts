@@ -16,7 +16,7 @@ function trySuperAdminLogin(email: string, password: string) {
   const token = jwt.sign(
     { id: "super-admin", email: envEmail, name: "Super Admin", role: "admin" },
     secret,
-    { expiresIn: process.env.JWT_EXPIRE || "7d" }
+    { expiresIn: process.env.JWT_EXPIRE || "7d" } as import("jsonwebtoken").SignOptions
   );
   return {
     success: true,
