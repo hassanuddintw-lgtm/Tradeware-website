@@ -115,8 +115,10 @@ export default function AdminLayout({
             <h1 className="text-2xl font-bold text-gray-900">Admin Panel</h1>
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600">{user.name}</span>
-              <span className="text-xs px-2 py-1 rounded bg-cyan-500/20 text-cyan-600 font-medium">
-                Admin
+              <span className={`text-xs px-2 py-1 rounded font-medium ${
+                user.role === "super_admin" ? "bg-amber-100 text-amber-700" : "bg-cyan-500/20 text-cyan-600"
+              }`}>
+                {user.role === "super_admin" ? "Super Admin" : user.role === "admin" ? "Admin" : user.role === "staff" ? "Staff" : user.role}
               </span>
             </div>
           </div>

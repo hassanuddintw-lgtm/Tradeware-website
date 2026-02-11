@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { UserPlus, Mail, Lock, User, Phone, Eye, EyeOff, ArrowRight } from "lucide-react";
@@ -23,6 +23,8 @@ export default function RegisterPage() {
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [showThankYou, setShowThankYou] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -56,14 +58,24 @@ export default function RegisterPage() {
     }
     if (res.requiresVerification) {
       setError("");
+      setRegisteredEmail(formData.email);
       setFormData({ name: "", email: "", phone: "", password: "", confirmPassword: "" });
-      router.push("/login?verified=check-email");
-      router.refresh();
+      setShowThankYou(true);
       return;
     }
-    router.push(routes.dashboard);
+    router.push(routes.admin);
     router.refresh();
   };
+
+  useEffect(() => {
+    if (!showThankYou) return;
+    const t = setTimeout(() => {
+      const params = registeredEmail ? `?email=${encodeURIComponent(registeredEmail)}` : "";
+      router.push(`${routes.verifyEmail}${params}`);
+      router.refresh();
+    }, 2500);
+    return () => clearTimeout(t);
+  }, [showThankYou, registeredEmail, router]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-dark-950 to-dark-900 py-16 pt-20 flex items-center">
@@ -233,6 +245,32 @@ export default function RegisterPage() {
               </button>
             </form>
           </motion.div>
+
+          {/* Thank you modal */}
+          {showThankYou && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70"
+              onClick={() => {}}
+            >
+              <motion.div
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                className="card p-8 max-w-md w-full text-center"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/20 mb-4">
+                  <UserPlus className="h-8 w-8 text-green-500" />
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-2">Thank you!</h2>
+                <p className="text-gray-400 mb-4">
+                  Your account has been created. We&apos;ve sent a 6-digit code to your email. You&apos;ll enter it on the next page to verify.
+                </p>
+                <div className="w-10 h-10 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto" />
+              </motion.div>
+            </motion.div>
+          )}
 
           {/* Sign In Link */}
           <motion.div

@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { setToken, clearToken, getToken, api } from "@/lib/api-client";
 
-export type AuthRole = "admin" | "user";
+export type AuthRole = "super_admin" | "admin" | "staff" | "client";
 export type AuthStatus = "pending" | "approved";
 
 export interface AuthUser {
@@ -40,7 +40,7 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   isAdmin: boolean;
   isApproved: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; role?: AuthRole }>;
+  login: (email: string, password: string, otp?: string) => Promise<{ success: boolean; error?: string; role?: AuthRole }>;
   logout: () => void;
   register: (data: { name: string; email: string; password: string; phone?: string }) => Promise<{ success: boolean; error?: string; requiresVerification?: boolean }>;
 }
@@ -81,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string, otp?: string) => {
     try {
       const res = await api<{
         success?: boolean;
@@ -90,7 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         token?: string;
       }>("/api/auth/login", {
         method: "POST",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, ...(otp ? { otp } : {}) }),
       });
       // Backend (Express) returns { success, message, data: { user, token } }
       const payload = res.data ?? res;
@@ -159,8 +159,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     isLoading,
     isAuthenticated: !!user,
-    isAdmin: user?.role === "admin",
-    isApproved: user?.role === "admin" || user?.status === "approved",
+    isAdmin: user?.role === "super_admin" || user?.role === "admin",
+    isApproved: user?.role === "super_admin" || user?.role === "admin" || user?.role === "staff" || user?.status === "approved",
     login,
     logout,
     register,

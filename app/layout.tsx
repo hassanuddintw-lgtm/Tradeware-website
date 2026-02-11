@@ -38,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${poppins.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`dark ${inter.variable} ${poppins.variable}`}>
       <body className="bg-cinematic-base text-white antialiased font-body">
         <ThemeProvider>
           <AuthProvider>

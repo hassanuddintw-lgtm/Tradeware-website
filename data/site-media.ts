@@ -32,7 +32,8 @@ export const galleryImages = [
   { src: "https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&w=800&q=90", alt: "Luxury vehicle" },
 ];
 
-/** Trust / About section – one large image */
+/** Trust / About section – one large image. Local first so it always loads; external as backup. */
+export const trustSectionImageLocal = "/trust-section-placeholder.svg";
 export const trustSectionImage = "https://images.unsplash.com/photo-1566473062277-5b4fc463dff2?auto=format&fit=crop&w=1200&q=92";
 
 /** How it works step images (optional) */

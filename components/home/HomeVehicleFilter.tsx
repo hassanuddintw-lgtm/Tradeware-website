@@ -589,12 +589,10 @@ export default function HomeVehicleFilter() {
             <div className="overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] py-2 px-1" aria-label="Region flags">
               <div className="marquee-flags-track flex w-max items-center gap-3">
                 {[...worldFlags, ...worldFlags].map((region, i) => (
-                  <a
+                  <span
                     key={`${region.slug}-${i}`}
-                    href={routes.countryDetail(region.slug)}
-                    className="flex shrink-0 items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-white/[0.06] bg-white/[0.03] hover:border-cyan-500/30 hover:bg-cyan-500/10 transition-colors overflow-hidden"
+                    className="flex shrink-0 items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden"
                     title={region.name}
-                    aria-label={region.name}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -604,7 +602,7 @@ export default function HomeVehicleFilter() {
                       height={32}
                       className="w-6 h-6 sm:w-7 sm:h-7 object-cover rounded-full"
                     />
-                  </a>
+                  </span>
                 ))}
               </div>
             </div>
