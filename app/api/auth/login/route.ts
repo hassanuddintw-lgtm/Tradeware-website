@@ -1,22 +1,22 @@
 import { NextResponse } from "next/server";
 import { loginUserFile } from "@/lib/auth-store";
 import { loginUser as loginUserMongo } from "@/lib/mongo-auth";
-import jwt from "jsonwebtoken";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 /** Super admin from env (production) – set SUPER_ADMIN_EMAIL + SUPER_ADMIN_PASSWORD in Vercel */
-function trySuperAdminLogin(email: string, password: string) {
+async function trySuperAdminLogin(email: string, password: string) {
   const envEmail = process.env.SUPER_ADMIN_EMAIL?.trim();
   const envPassword = process.env.SUPER_ADMIN_PASSWORD;
   if (!envEmail || !envPassword) return null;
   if (email.toLowerCase() !== envEmail.toLowerCase() || password !== envPassword) return null;
+  const jwt = await import("jsonwebtoken");
   const secret = process.env.JWT_SECRET || "fallback-secret";
   const token = jwt.sign(
     { id: "super-admin", email: envEmail, name: "Super Admin", role: "admin" },
     secret,
-    { expiresIn: process.env.JWT_EXPIRE || "7d" } as import("jsonwebtoken").SignOptions
+    { expiresIn: process.env.JWT_EXPIRE || "7d" } as unknown as import("jsonwebtoken").SignOptions
   );
   return {
     success: true,
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const superResult = trySuperAdminLogin(email, password);
+  const superResult = await trySuperAdminLogin(email, password);
   if (superResult) return NextResponse.json(superResult);
 
   const useMongo = !!process.env.MONGODB_URI;
