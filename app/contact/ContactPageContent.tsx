@@ -40,8 +40,6 @@ export function ContactPageContent({
   onFormChange,
   submitted,
   onSubmit,
-  submitError = null,
-  submitting = false,
   formMicroInView,
   microcopyVariants,
 }: ContactPageContentProps) {
@@ -58,10 +56,10 @@ export function ContactPageContent({
               <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-cyan-400 shrink-0" />
               <span className="text-cyan-400 font-bold text-[8px] sm:text-[9px] uppercase tracking-[0.18em] font-body">Connect</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white mb-4 md:mb-5 tracking-tighter font-display uppercase leading-none break-words">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white mb-3 md:mb-4 tracking-tighter font-display uppercase leading-none break-words">
               CONTACT <span className="gradient-text gradient-text-glow italic">US</span>
             </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-3xl mx-auto font-body font-medium leading-relaxed break-words px-1">
+            <p className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-400 max-w-3xl mx-auto font-body font-medium leading-relaxed break-words px-1">
               Our experienced team is ready to assist you with vehicle inquiries, import consultations, pricing information, and any questions about our services. Whether you&apos;re a first-time importer or an experienced buyer, we provide personalized guidance to help you find the perfect vehicle and navigate the import process with confidence. Contact us via phone, email, or use the form below, and we&apos;ll respond promptly to assist with your Japanese vehicle import needs.
             </p>
           </div>
@@ -69,9 +67,9 @@ export function ContactPageContent({
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-6 lg:gap-8">
             <div ref={infoRef} className="space-y-6">
               {[
-                { icon: Phone, label: "Direct Line", value: siteConfig.contact.phone, href: `tel:${siteConfig.contact.phone.replace(/\s/g, "")}`, desc: "Mon-Fri: 9:00 AM - 6:00 PM GMT", color: "bg-cyan-500", isEmail: false },
-                { icon: Mail, label: "Electronic Mail", value: "", href: "#", desc: "Response within 24 hours", color: "bg-blue-500", isEmail: true },
-                { icon: MapPin, label: "Global Headquarters", value: siteConfig.contact.address, href: "#", desc: "Export Ports: Yokohama, Kobe, Osaka", color: "bg-purple-500", isEmail: false },
+                { icon: Phone, label: "Direct Line", value: siteConfig.contact.phone, href: `tel:${siteConfig.contact.phone.replace(/\s/g, "")}`, desc: "Mon-Fri: 9:00 AM - 6:00 PM GMT", color: "bg-cyan-500" },
+                { icon: Mail, label: "Electronic Mail", value: siteConfig.contact.emails.join(" / "), href: `mailto:${siteConfig.contact.email}`, desc: "Response within 24 hours", color: "bg-blue-500" },
+                { icon: MapPin, label: "Global Headquarters", value: siteConfig.contact.address, href: "#", desc: "Export Ports: Yokohama, Kobe, Osaka", color: "bg-purple-500" },
               ].map((item, i) => (
                 <motion.div
                   key={i}
@@ -84,28 +82,14 @@ export function ContactPageContent({
                     <div className={`w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg md:rounded-xl ${item.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shrink-0`}>
                       <item.icon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-black shrink-0" />
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-[9px] sm:text-[10px] font-black text-gray-500 uppercase tracking-widest font-body mb-1 sm:mb-1.5 break-words">{item.label}</h3>
-                      {item.isEmail ? (
-                        <div className="space-y-1.5">
-                          {siteConfig.contact.emails.map((email) => (
-                            <a
-                              key={email}
-                              href={`mailto:${email}`}
-                              className="block text-sm sm:text-base font-semibold text-white hover:text-cyan-400 transition-colors break-all"
-                            >
-                              {email}
-                            </a>
-                          ))}
-                        </div>
-                      ) : (
-                        <a href={item.href} className="text-sm sm:text-base md:text-lg font-bold text-white hover:text-cyan-400 transition-colors break-all">
-                          {item.value}
-                        </a>
-                      )}
+                    <div className="min-w-0">
+                      <h3 className="text-[8px] sm:text-[9px] font-black text-gray-500 uppercase tracking-widest font-body mb-0.5 break-words">{item.label}</h3>
+                      <a href={item.href} className="text-sm sm:text-base md:text-lg font-black text-white font-display italic hover:text-cyan-400 transition-colors break-all">
+                        {item.value}
+                      </a>
                     </div>
                   </div>
-                  <p className="text-[9px] sm:text-[10px] font-bold text-gray-600 uppercase tracking-widest font-body break-words">{item.desc}</p>
+                  <p className="text-[8px] sm:text-[9px] font-bold text-gray-600 uppercase tracking-widest font-body break-words">{item.desc}</p>
                 </motion.div>
               ))}
 
@@ -251,16 +235,15 @@ export function ContactPageContent({
                       </div>
                       <motion.button
                         type="submit"
-                        disabled={submitting}
-                        className="w-full btn-primary btn-glow-pulse py-6 rounded-2xl flex items-center justify-center gap-4 text-sm tracking-[0.2em] font-black group shadow-cyan-glow disabled:opacity-70 disabled:cursor-not-allowed"
-                        whileHover={submitting ? {} : { scale: 1.02 }}
-                        whileTap={submitting ? {} : { scale: 0.99 }}
+                        className="w-full btn-primary btn-glow-pulse py-6 rounded-2xl flex items-center justify-center gap-4 text-sm tracking-[0.2em] font-black group shadow-cyan-glow"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.99 }}
                         initial={{ opacity: 0, y: 12 }}
                         animate={formMicroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
                         transition={{ delay: 0.35, duration: 0.4, ease: "easeOut" }}
                       >
-                        <Send className={`h-5 w-5 ${submitting ? "" : "group-hover:translate-x-1 group-hover:-translate-y-1"} transition-transform`} />
-                        {submitting ? "SENDING…" : "INITIATE SEQUENCE"}
+                        <Send className="h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                        INITIATE SEQUENCE
                       </motion.button>
                     </form>
                   </>

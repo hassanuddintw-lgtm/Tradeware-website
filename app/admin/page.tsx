@@ -49,7 +49,7 @@ export default function AdminDashboard() {
       .finally(() => setLoading(false));
   }, []);
 
-  const pendingCount = userList.filter((u) => (u.role === "client" || u.role === "user") && u.status === "pending").length;
+  const pendingCount = userList.filter((u) => u.role === "user" && u.status === "pending").length;
 
   const o = data?.overview;
   const stats = [

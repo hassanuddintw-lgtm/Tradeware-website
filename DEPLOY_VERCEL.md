@@ -102,7 +102,7 @@ Optional (jaise need ho):
 1. **Deploy** button dabao.
 2. Pehli build mein `prisma generate` + `next build` chalega.
 3. Agar build fail ho to **Deployments** → us deployment par click → **Building** logs dekho. Common issues:
-   - **`DATABASE_URL` missing** → Build fail hota hai (Prisma generate ko chahiye). Vercel → Settings → Environment Variables → `DATABASE_URL` = Postgres URL add karo, phir **Redeploy**.
+   - `DATABASE_URL` missing → env var add karo.
    - Prisma error → `prisma/schema.prisma` mein `provider = "postgresql"` aur sahi URL check karo.
    - `JWT_SECRET` missing → add karo (app chal jati hai but production ke liye recommended).
 

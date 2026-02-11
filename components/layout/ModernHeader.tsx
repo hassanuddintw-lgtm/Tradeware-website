@@ -49,7 +49,7 @@ export default function ModernHeader() {
     <>
       <header
         ref={headerRef}
-        className="fixed top-0 left-0 right-0 z-50 bg-transparent transition-all duration-300 ease-out max-md:bg-black/70 max-md:backdrop-blur-xl max-md:border-b max-md:border-white/[0.06] max-md:shadow-[0_1px_0_0_rgba(255,255,255,0.04)] dark:max-md:bg-black/70 dark:max-md:border-white/[0.06] max-md:bg-white/80 max-md:dark:bg-black/70"
+        className="fixed top-0 left-0 right-0 z-50 bg-transparent transition-all duration-300 ease-out max-md:bg-black/70 max-md:backdrop-blur-xl max-md:border-b max-md:border-white/[0.06] max-md:shadow-[0_1px_0_0_rgba(255,255,255,0.04)]"
       >
         <div className="container-custom">
           <div className="flex items-center justify-between h-16 md:h-[4.5rem] max-md:h-12 max-md:min-h-[48px]">
@@ -125,7 +125,7 @@ export default function ModernHeader() {
               <UniversalSearch />
               <a
                 href={routes.login}
-                className="hidden md:inline-flex items-center px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                className="hidden md:inline-flex items-center px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-400 hover:text-white transition-colors cursor-pointer"
               >
                 Admin Login
               </a>
@@ -141,7 +141,7 @@ export default function ModernHeader() {
               {/* Hamburger - mobile only (lg:hidden) */}
               <button
                 type="button"
-                className="lg:hidden flex flex-col justify-center items-center w-10 h-10 max-md:w-11 max-md:min-w-[44px] max-md:min-h-[44px] rounded-lg max-md:rounded-xl max-md:border max-md:border-slate-200 max-md:dark:border-white/10 text-slate-700 dark:text-white/90 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 active:bg-slate-200 dark:active:bg-white/10 transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                className="lg:hidden flex flex-col justify-center items-center w-10 h-10 max-md:w-11 max-md:min-w-[44px] max-md:min-h-[44px] rounded-lg max-md:rounded-xl max-md:border max-md:border-white/10 text-white/90 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={mobileMenuOpen}
@@ -182,7 +182,6 @@ export default function ModernHeader() {
             >
               <div className="flex items-center justify-between h-12 min-h-[48px] px-4 border-b border-white/[0.08] shrink-0">
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">Menu</span>
-                <div className="flex items-center gap-2">
                 <motion.button
                   type="button"
                   onClick={() => setMobileMenuOpen(false)}
@@ -192,7 +191,6 @@ export default function ModernHeader() {
                 >
                   <X className="h-5 w-5" strokeWidth={2} />
                 </motion.button>
-                </div>
               </div>
               <div className="flex-1 overflow-y-auto p-4 pt-5 pb-5 space-y-0.5">
                 {navigation.map((item) => (

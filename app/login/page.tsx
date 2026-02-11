@@ -32,16 +32,7 @@ function LoginContent() {
   useEffect(() => {
     const err = searchParams.get("error");
     const verified = searchParams.get("verified");
-    const registered = searchParams.get("registered");
-    if (verified === "1") {
-      setSuccessMsg("Email verified! Sign in with your password below.");
-      setError("");
-      setInfoMsg("");
-    } else if (registered === "1") {
-      setSuccessMsg("Account created! You can sign in with your password below.");
-      setError("");
-      setInfoMsg("");
-    } else if (verified === "check-email") {
+    if (verified === "check-email") {
       setSuccessMsg("Registration successful! Please check your email to verify your account.");
       setError("");
       setInfoMsg("");
@@ -69,7 +60,7 @@ function LoginContent() {
       setError(res.error || "Login failed");
       return;
     }
-    if (res.role === "super_admin" || res.role === "admin") {
+    if (res.role === "admin") {
       router.push(routes.admin);
     } else {
       router.push(routes.dashboard);

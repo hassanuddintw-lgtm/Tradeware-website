@@ -38,7 +38,6 @@ export const routes = {
   // Authentication Routes
   login: '/login',
   register: '/register',
-  verifyEmail: '/verify-email',
 
   // Dashboard Routes (user)
   dashboard: '/dashboard',

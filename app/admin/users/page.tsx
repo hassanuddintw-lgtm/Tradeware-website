@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api-client";
-import { useAuthContext } from "@/context/AuthContext";
-import { CheckCircle, Loader2, UserCheck, Shield } from "lucide-react";
-
-const ROLES = ["super_admin", "admin", "staff", "client"] as const;
+import { Users, CheckCircle, Loader2, UserCheck, Shield } from "lucide-react";
 
 interface UserRow {
   id: string;
@@ -16,23 +13,10 @@ interface UserRow {
   createdAt: string;
 }
 
-function roleLabel(r: string): string {
-  switch (r) {
-    case "super_admin": return "Super Admin";
-    case "admin": return "Admin";
-    case "staff": return "Staff";
-    case "client":
-    case "user": return "Client";
-    default: return r;
-  }
-}
-
 export default function AdminUsersPage() {
-  const { user: me } = useAuthContext();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [approvingId, setApprovingId] = useState<string | null>(null);
-  const [roleUpdatingId, setRoleUpdatingId] = useState<string | null>(null);
 
   useEffect(() => {
     api<{ data: UserRow[] }>("/api/admin/users")
@@ -40,8 +24,6 @@ export default function AdminUsersPage() {
       .catch(() => setUsers([]))
       .finally(() => setLoading(false));
   }, []);
-
-  const canAssignRole = me?.role === "super_admin";
 
   const handleApprove = async (id: string) => {
     setApprovingId(id);
@@ -57,27 +39,9 @@ export default function AdminUsersPage() {
     }
   };
 
-  const handleRoleChange = async (userId: string, newRole: string) => {
-    setRoleUpdatingId(userId);
-    try {
-      await api<{ success: boolean }>(`/api/admin/users/${userId}/role`, {
-        method: "PATCH",
-        body: JSON.stringify({ role: newRole }),
-      });
-      setUsers((prev) =>
-        prev.map((u) => (u.id === userId ? { ...u, role: newRole, status: newRole === "client" ? u.status : undefined } : u))
-      );
-    } catch {
-      // keep UI as is on error
-    } finally {
-      setRoleUpdatingId(null);
-    }
-  };
-
-  const isClient = (u: UserRow) => u.role === "client" || u.role === "user";
-  const pending = users.filter((u) => isClient(u) && u.status === "pending");
-  const approved = users.filter((u) => isClient(u) && u.status === "approved");
-  const staffAdmins = users.filter((u) => ["super_admin", "admin", "staff"].includes(u.role));
+  const pending = users.filter((u) => u.role === "user" && u.status === "pending");
+  const approved = users.filter((u) => u.role === "user" && u.status === "approved");
+  const admins = users.filter((u) => u.role === "admin");
 
   if (loading) {
     return (
@@ -92,7 +56,7 @@ export default function AdminUsersPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
         <p className="text-gray-600 mt-1">
-          Approve clients and assign roles. Only Super Admin can change roles (Super Admin, Admin, Staff, Client). Clients get access to bidding and tracking after approval.
+          Approve new users to give them access to Live Auctions, Car Tracking, and Payments. Only you (main admin) can approve.
         </p>
       </div>
 
@@ -146,14 +110,14 @@ export default function AdminUsersPage() {
         )}
       </div>
 
-      {/* Approved clients */}
+      {/* Approved users */}
       <div className="card p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
           <CheckCircle className="h-5 w-5 text-green-500" />
-          Approved clients ({approved.length})
+          Approved users ({approved.length})
         </h2>
         {approved.length === 0 ? (
-          <p className="text-gray-500 text-sm">No approved clients yet.</p>
+          <p className="text-gray-500 text-sm">No approved users yet.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -162,7 +126,6 @@ export default function AdminUsersPage() {
                   <th className="pb-3 font-medium">Name</th>
                   <th className="pb-3 font-medium">Email</th>
                   <th className="pb-3 font-medium">Registered</th>
-                  {canAssignRole && <th className="pb-3 font-medium text-right">Change role</th>}
                 </tr>
               </thead>
               <tbody>
@@ -173,22 +136,6 @@ export default function AdminUsersPage() {
                     <td className="py-3 text-gray-500">
                       {new Date(u.createdAt).toLocaleDateString()}
                     </td>
-                    {canAssignRole && (
-                      <td className="py-3 text-right">
-                        <select
-                          value={u.role === "user" ? "client" : u.role}
-                          disabled={roleUpdatingId === u.id}
-                          onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                          className="text-sm border border-gray-300 rounded-lg px-2 py-1.5 bg-white"
-                        >
-                          {ROLES.map((r) => (
-                            <option key={r} value={r} disabled={me?.role === "admin" && r === "super_admin"}>
-                              {roleLabel(r)}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                    )}
                   </tr>
                 ))}
               </tbody>
@@ -197,14 +144,14 @@ export default function AdminUsersPage() {
         )}
       </div>
 
-      {/* Staff & Admins */}
+      {/* Admins */}
       <div className="card p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
           <Shield className="h-5 w-5 text-cyan-600" />
-          Staff & Admins ({staffAdmins.length})
+          Admins ({admins.length})
         </h2>
-        {staffAdmins.length === 0 ? (
-          <p className="text-gray-500 text-sm">No staff or admins yet.</p>
+        {admins.length === 0 ? (
+          <p className="text-gray-500 text-sm">No other admins.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -213,42 +160,18 @@ export default function AdminUsersPage() {
                   <th className="pb-3 font-medium">Name</th>
                   <th className="pb-3 font-medium">Email</th>
                   <th className="pb-3 font-medium">Role</th>
-                  {canAssignRole && <th className="pb-3 font-medium text-right">Action</th>}
                 </tr>
               </thead>
               <tbody>
-                {staffAdmins.map((u) => (
+                {admins.map((u) => (
                   <tr key={u.id} className="border-b border-gray-100">
                     <td className="py-3 font-medium text-gray-900">{u.name}</td>
                     <td className="py-3 text-gray-600">{u.email}</td>
                     <td className="py-3">
-                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                        u.role === "super_admin" ? "bg-amber-100 text-amber-700" :
-                        u.role === "admin" ? "bg-cyan-100 text-cyan-700" : "bg-gray-100 text-gray-700"
-                      }`}>
-                        {roleLabel(u.role)}
+                      <span className="px-2 py-0.5 rounded bg-cyan-100 text-cyan-700 text-xs font-medium">
+                        Admin
                       </span>
                     </td>
-                    {canAssignRole && (
-                      <td className="py-3 text-right">
-                        {u.id === me?.id ? (
-                          <span className="text-gray-400 text-xs">(you)</span>
-                        ) : (
-                          <select
-                            value={u.role}
-                            disabled={roleUpdatingId === u.id || (me?.role === "admin" && u.role === "super_admin")}
-                            onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                            className="text-sm border border-gray-300 rounded-lg px-2 py-1.5 bg-white"
-                          >
-                            {ROLES.map((r) => (
-                              <option key={r} value={r} disabled={me?.role === "admin" && r === "super_admin"}>
-                                {roleLabel(r)}
-                              </option>
-                            ))}
-                          </select>
-                        )}
-                      </td>
-                    )}
                   </tr>
                 ))}
               </tbody>
@@ -256,7 +179,6 @@ export default function AdminUsersPage() {
           </div>
         )}
       </div>
-
     </div>
   );
 }
