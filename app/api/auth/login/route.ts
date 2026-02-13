@@ -8,9 +8,9 @@ export const runtime = "nodejs";
 /** Super admin from env (production) – set SUPER_ADMIN_EMAIL + SUPER_ADMIN_PASSWORD in Vercel */
 async function trySuperAdminLogin(email: string, password: string) {
   const envEmail = process.env.SUPER_ADMIN_EMAIL?.trim();
-  const envPassword = process.env.SUPER_ADMIN_PASSWORD;
+  const envPassword = process.env.SUPER_ADMIN_PASSWORD?.trim();
   if (!envEmail || !envPassword) return null;
-  if (email.toLowerCase() !== envEmail.toLowerCase() || password !== envPassword) return null;
+  if (email.toLowerCase() !== envEmail.toLowerCase() || password.trim() !== envPassword) return null;
   const jwt = await import("jsonwebtoken");
   const secret = process.env.JWT_SECRET || "fallback-secret";
   const token = jwt.sign(
